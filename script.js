@@ -1,31 +1,21 @@
-const searchInput = document.getElementById("search-input");
-const resultsArtist = document.getElementById("result-artist");
-const resultPlaylist = document.getElementById("result-playlists");
+const greetingElement = document.getElementById("greeting");
 
-function requestApi(searchTerm) {
-  fetch(`http://localhost:4000/artists?name_like=${searchTerm}`)
-    .then((response) => response.json())
-    .then((results) => displayResults(results));
-}
+const currentHour = new Date().getHours();
 
-function displayResults(results) {
-  resultPlaylist.classList.add("hidden");
-  const artistName = document.getElementById("artist-name");
-  const artistImage = document.getElementById("artist-img");
+const greetingMessage =
+  currentHour >= 5 && currentHour < 12
+    ? "Bom dia"
+    : currentHour >= 12 && currentHour < 18
+    ? "Boa tarde"
+    : "Boa noite";
 
-  results.forEach(element => {
-    artistName.innerText = element.name;
-    artistImage.src = element.urlImage;
-  });
-  resultsArtist.classList.remove("hidden");
-}
+greetingElement.textContent = greetingMessage;
 
-searchInput.addEventListener("input", function () {
-  const searchTerm = searchInput.value.toLowerCase();
-  if (searchTerm === "") {
-    resultsArtist.classList.add("hidden");
-    resultPlaylist.classList.remove("hidden");
-    return;
-  }
-  requestApi(searchTerm);
+const container = document.querySelector(".offer__list-item");
+
+const observer = new ResizeObserver(() => {
+  const containerWidth = container.offsetWidth;
+  const numColumns = Math.floor(containerWidth / 200);
+
+  container.style.gridTemplateColumns = `repeat(${numColumns}, minmax(200px, 1fr))`;
 });
